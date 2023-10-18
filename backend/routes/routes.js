@@ -7,7 +7,9 @@ const User = require('../src/user/userModel');
 // После этого вы можете использовать userController
 router.route('/user/create').post(userController.createUserControllerFn);
 
-router.get('/user', async (req, res) => {
+//router.route('/user/register').post(userController.createUserControllerFn);
+
+router.get('/user-list', async (req, res) => {
     try {
         const users = await User.find({}).exec();
         res.json(users);
@@ -17,12 +19,12 @@ router.get('/user', async (req, res) => {
     }
 });
 
-// Маршрут для получения данных пользователя по имени
-router.get('/user/:id', async (req, res) => {
-    const id = req.params.id;
+//Маршрут для получения данных пользователя по id
+router.get('/user/:_id', async (req, res) => {
+    const _id = req.params._id;
     try {
-        // Используйте MongoDB или другую базу данных для поиска пользователя по имени
-        const user = await User.findOne({ id }).exec();
+        // 
+        const user = await User.findOne({ _id }).exec();
         res.json(user);
         console.log('Durys')
     } catch (error) {
@@ -31,8 +33,8 @@ router.get('/user/:id', async (req, res) => {
     }
 });
 
-// Используйте app.put() для настройки маршрута PUT-запроса
-app.put('/user/:id', async (req, res) => {
+//Используйте app.put() для настройки маршрута PUT-запроса
+router.put('/user/:id', async (req, res) => {
     const { id } = req.params;
     const userData = req.body;
 
@@ -42,6 +44,23 @@ app.put('/user/:id', async (req, res) => {
     } catch (error) {
         console.error('Ошибка при обновлении пользователя:', error);
         res.status(500).json({ error: 'Ошибка при обновлении пользователя' });
+    }
+});
+
+router.delete('/user/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await User.findOneAndDelete({ _id: id });
+
+        if (user) {
+            res.status(200).json({ message: 'User deleted successfully' });
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ error: 'Error deleting user' });
     }
 });
 

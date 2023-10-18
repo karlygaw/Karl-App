@@ -9,7 +9,6 @@ var createUserControllerFn = async (req, res) => {
         userModelData.email = body.email
         userModelData.mobile = body.mobile
         userModelData.gender = body.gender
-        userModelData.mobile = body.mobile
         userModelData.pwd = body.pwd
         await userModelData.save()
 
